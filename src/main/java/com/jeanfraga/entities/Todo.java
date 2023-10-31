@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "todos")
@@ -18,7 +19,9 @@ public class Todo implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@NotBlank(message = "nome is mandatory!")
 	private String nome;
+	@NotBlank(message = "descricao is mandatory!")
 	private String descricao;
 	private boolean realizado;
 	private Integer prioridade;

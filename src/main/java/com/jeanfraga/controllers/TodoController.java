@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/todo/v1")
@@ -90,7 +91,7 @@ public class TodoController {
 			@ApiResponse(description = "Not Found", responseCode="404", content = @Content),
 			@ApiResponse(description = "Internal Server Error", responseCode="500", content = @Content)
 	})
-	public ResponseEntity<List<TodoVO>> create(@RequestBody TodoVO todo) {
+	public ResponseEntity<List<TodoVO>> create(@RequestBody @Valid TodoVO todo) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.create(todo));
 	}
 	
@@ -110,7 +111,7 @@ public class TodoController {
 			@ApiResponse(description = "Not Found", responseCode="404", content = @Content),
 			@ApiResponse(description = "Internal Server Error", responseCode="500", content = @Content)
 	})
-	public ResponseEntity<List<TodoVO>> update(@RequestBody TodoVO todo) {
+	public ResponseEntity<List<TodoVO>> update(@RequestBody @Valid TodoVO todo) {
 		return ResponseEntity.ok().body(service.update(todo));
 	}
 	
