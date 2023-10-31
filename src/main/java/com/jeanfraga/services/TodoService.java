@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import com.jeanfraga.controllers.TodoController;
 import com.jeanfraga.entities.Todo;
 import com.jeanfraga.exceptions.ResourceNotFoundException;
 import com.jeanfraga.mapper.Mapper;
@@ -26,7 +29,11 @@ public class TodoService {
 	public List<TodoVO> findAll() {
 		logger.info("Finding all todos");
 		
-		return Mapper.parseListObjects(repository.findAll(), TodoVO.class); 
+		var todos = Mapper.parseListObjects(repository.findAll(), TodoVO.class);
+		todos
+			.stream()
+			.forEach(t -> t.add(linkTo(methodOn(TodoController.class).findById(t.getKey())).withSelfRel()));
+		return todos;
 	}
 	
 	public TodoVO findById(Long id) {
@@ -34,8 +41,9 @@ public class TodoService {
 		
 		var entity = repository.findById(id)
 			.orElseThrow(() ->  new ResourceNotFoundException("Not found resources for this ID!"));
-		
-		return Mapper.parseObject(entity, TodoVO.class);
+		var vo = Mapper.parseObject(entity, TodoVO.class);
+		vo.add(linkTo(methodOn(TodoController.class).findById(vo.getKey())).withSelfRel());
+		return vo;
 	}
 	
 	public List<TodoVO> create(TodoVO todo) {
@@ -49,7 +57,7 @@ public class TodoService {
 	public List<TodoVO> update(TodoVO todo) {
 		logger.info("Updating one todo");
 		
-		var entity = repository.findById(todo.getId())
+		var entity = repository.findById(todo.getKey())
 				.orElseThrow(() ->  new ResourceNotFoundException("Not found resources for this ID!"));
 		entity.setNome(todo.getNome());
 		entity.setDescricao(todo.getDescricao());
