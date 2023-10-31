@@ -61,12 +61,13 @@ public class TodoService {
 		return findAll();
 	}
 	
-	public void delete(Long id) {
+	public List<TodoVO> delete(Long id) {
 		logger.info("Deleting one Todo");
 		
 		var entity = repository.findById(id)
 				.orElseThrow(() ->  new ResourceNotFoundException("Not found resources for this ID!"));
 		
 		repository.delete(entity);
+		return findAll();
 	}
 }
