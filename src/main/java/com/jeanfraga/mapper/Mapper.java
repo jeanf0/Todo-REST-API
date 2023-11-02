@@ -13,6 +13,7 @@ public class Mapper {
 	private static ModelMapper mapper = new ModelMapper();
 	static {
 		mapper.createTypeMap(Todo.class, TodoVO.class).addMapping(Todo::getId, TodoVO::setKey);
+		mapper.createTypeMap(TodoVO.class, Todo.class).addMapping(TodoVO::getKey, Todo::setId);
 	}
 	
 	public static <O, D> D parseObject(O origin, Class<D> destination) {
